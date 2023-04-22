@@ -1,8 +1,8 @@
-package patterns.models.menu;
+package patterns.models.menu.menuitems;
 
-public abstract class MenuItemLeaf extends MenuItem{
-  private String name;
-  private Runnable command;
+public class MenuItemLeaf extends MenuItem{
+  private final String name;
+  private final Runnable command;
 
   public MenuItemLeaf(String name, Runnable command) {
     this.name = name;
