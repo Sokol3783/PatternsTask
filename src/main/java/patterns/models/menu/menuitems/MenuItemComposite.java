@@ -1,6 +1,5 @@
 package patterns.models.menu.menuitems;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 import patterns.main.Main;

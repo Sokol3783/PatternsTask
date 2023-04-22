@@ -2,6 +2,7 @@ package patterns.models.menu;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import patterns.services.PersonService;
 import patterns.models.menu.menuitems.MenuItem;
 import patterns.models.menu.menuitems.MenuItemLeaf;
 
@@ -17,20 +18,43 @@ public abstract class MenuCreator {
 
   public static class MainMenuCreator extends MenuCreator {
 
-    public static MainMenu createMainMenu() {
+    public static Menu createMainMenu() {
       Map<Integer, MenuItem> menu = MenuCreator.emptyMenu();
       menu.put(1, PersonMenuCreator.createPersonMenu());
       menu.put(2, MovieMenuCreator.createMovieMenu());
       menu.put(3, RentalMenuCreator.createRentalMenu());
-      menu.put(4, MenuCreator.exit());
-      return new MainMenu("Main menu", menu);
+      menu.put(9, MenuCreator.exit());
+      return new Menu("Main menu", menu);
     }
   }
 
   private static class PersonMenuCreator {
 
+    private static PersonService service = new PersonService();
     public static MenuItem createPersonMenu() {
-      return null;
+      Map<Integer, MenuItem> menu = MenuCreator.emptyMenu();      
+      menu.put(1, listPerson());
+      menu.put(2, addPerson());      
+      menu.put(9, MenuCreator.exit());
+      return new Menu("Person", menu);
+    }
+
+    private static MenuItem addPerson() {
+      return new MenuItemLeaf("Add person", new Runnable() {
+        @Override
+        public void run() {
+          service.addPerson();
+        }
+      });
+    }
+
+    private static MenuItem listPerson() {
+      return new MenuItemLeaf("Add person", new Runnable() {
+        @Override
+        public void run() {
+          service.listPerson();
+        }
+      });
     }
   }
 
