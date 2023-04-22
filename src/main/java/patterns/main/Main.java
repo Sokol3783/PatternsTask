@@ -1,10 +1,12 @@
 package patterns.main;
 
-import patterns.task.*;
-
-import java.util.List;
+import java.util.Scanner;
+import patterns.models.menu.MenuCreator;
+import patterns.models.menu.menuitems.MenuItem;
 
 public class Main {
+
+    public static Scanner in =new Scanner(System.in);
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -12,17 +14,8 @@ public class Main {
     }
 
     private void run() {
-        List<Rental> rentals = List.of(
-                new Rental(new Movie("Rambo", new Regular()), 1),
-                new Rental(new Movie("Lord of the Rings", new NewRelease()), 4),
-                new Rental(new Movie("Harry Potter", new Children()), 5)
-        );
-
-        Customer customer = new Customer("John Doe", rentals);
-
-        String statement = customer.statement();
-
-        System.out.println(statement);
+        MenuItem menu = MenuCreator.MainMenuCreator.createMainMenu();
+        menu.run();
     }
 }
 
