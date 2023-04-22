@@ -22,7 +22,7 @@ public class Customer {
         String result = "Rental Record for " + getName() + "\n";
         for (Rental each : rentals) {
             double thisAmount = each.getAmount();
-            frequentRenterPoints = each.getFrequentRenterPoints(frequentRenterPoints);
+            frequentRenterPoints += each.getFrequentRenterPoints();
             //show figures for this rental
             result += "\t" + each.getMovie().getTitle() + "\t" + thisAmount + "\n";
             totalAmount += thisAmount;
