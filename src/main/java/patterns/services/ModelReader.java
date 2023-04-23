@@ -1,13 +1,12 @@
-package patterns.util;
+package patterns.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import patterns.services.Service;
 
-public class ServiceReader<T> {
+public class ModelReader<T> {
   private Service<T> service;
 
-  public ServiceReader(Service<T> service) {
+  public ModelReader(Service<T> service) {
     this.service = service;
   }
 
