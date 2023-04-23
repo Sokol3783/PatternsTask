@@ -4,7 +4,6 @@ import patterns.main.Main;
 
 public class Utils {
 
-  // Function that
   public static String enterTheValue(String nameValue, int length){
     System.out.println("Enter the " + nameValue);
     String name = "";
