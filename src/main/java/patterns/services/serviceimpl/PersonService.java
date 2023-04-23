@@ -1,35 +1,46 @@
-package patterns.services;
+package patterns.services.serviceimpl;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Scanner;
 import patterns.main.Main;
 import patterns.models.Person;
 import patterns.models.Person.PersonRole;
+import patterns.services.Service;
+import patterns.util.Utils;
 import patterns.util.Writer;
 
 public class PersonService implements Service<Person> {
 
-  private final Collection<Person> persons;
-  private final Scanner in;
+  private final Collection<Person> coll;
   private final Writer writer;
+  private static PersonService service;
 
-  public PersonService(){
-    in = Main.in;
-    persons = new HashSet<>();
+  private PersonService(){
+    coll = new HashSet<>();
     writer = new Writer(Person.class.getName());
   }
 
+  public static PersonService getInstance() {
+     if (service == null) {
+       service = new PersonService();
+     }
+     return service;
+  }
 
   @Override
   public boolean addModel() {
-    Person person = new Person(getPersonId(),enterName(),enterRole());
+    Person person = new Person(getNextId(), Utils.enterTheValue("name", 3),enterRole());
     if (writeToTXT(person)) {
-      persons.add(person);
+      coll.add(person);
       return true;
     }
     return false;
+  }
+
+  private int getNextId() {
+    int max = coll.stream().mapToInt(Person::getId).max().orElse(0);
+    return ++max;
   }
 
   private boolean writeToTXT(Person person) {
@@ -48,8 +59,8 @@ public class PersonService implements Service<Person> {
   private PersonRole enterRole() {
     System.out.printf("Enter the role of person '%s' or '%s'", PersonRole.ACTOR, PersonRole.DIRECTOR);
     while (true) {
-      if (in.hasNextLine()) {
-        switch (in.nextLine()) {
+      if (Main.in.hasNextLine()) {
+        switch (Main.in.nextLine()) {
           case "ACTOR" :return PersonRole.ACTOR;
           case "DIRECTOR":return PersonRole.DIRECTOR;
         }
@@ -57,30 +68,11 @@ public class PersonService implements Service<Person> {
     }
   }
 
-  private int getPersonId() {
-     int max = persons.stream().mapToInt(Person::getId).max().orElse(0);
-     return ++max;
-  }
-
-  private String enterName() {
-    System.out.println("Enter the name");
-    String name = "";
-    while (name.length() > 3){
-      if (in.hasNextLine()) {
-        name = in.nextLine().trim();
-        if (name.length() <= 3) {
-          System.out.println("Name should be longer than 3");
-          name = "";
-        }
-      }
-    }
-    return name;
-  }
 
   @Override
   public void listModel() {
     System.out.printf("%-3s %20s %10s", "id", "name", "role");
-    persons.forEach(System.out::println);
+    coll.forEach(System.out::println);
   }
 
   @Override

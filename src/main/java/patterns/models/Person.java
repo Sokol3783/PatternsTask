@@ -1,6 +1,6 @@
 package patterns.models;
 
-public class Person {
+public class Person{
   private final String name;
 
   private final PersonRole role;
