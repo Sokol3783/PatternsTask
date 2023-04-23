@@ -20,7 +20,7 @@ public class Writer {
     writer.close();
   }
 
-  public void updateById(String filename, String id, String newLine) throws IOException {
+  public void updateById(String id, String newLine) throws IOException {
     File inputFile = new File(RESOURCE_PATH + filename);
     File tempFile = new File(RESOURCE_PATH + "temp_" + filename);
     BufferedReader reader = new BufferedReader(new FileReader(inputFile));
@@ -58,7 +58,7 @@ public class Writer {
     return false;
   }
 
-  public String getById(String filename, String id) throws IOException {
+  public String getById(String id) throws IOException {
     File file = new File(RESOURCE_PATH + filename);
 
     BufferedReader reader = new BufferedReader(new FileReader(file));
