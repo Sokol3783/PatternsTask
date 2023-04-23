@@ -1,6 +1,5 @@
 package patterns.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ModelReader<T> {
@@ -10,13 +9,9 @@ public class ModelReader<T> {
     this.service = service;
   }
 
-  public List<T> readAll(String line) {
-    List<T> objects = new ArrayList<>();
-    T object = service.read(line);
-    while (object != null) {
-      objects.add(object);
-      object = service.read(line);
+  public void readAll(List<String> lines) {
+    for (String line : lines){
+      service.read(line);
     }
-    return objects;
   }
 }

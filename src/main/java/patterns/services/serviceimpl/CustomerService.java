@@ -3,7 +3,9 @@ package patterns.services.serviceimpl;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import patterns.models.Customer;
+import patterns.models.Person;
 import patterns.services.Service;
 import patterns.util.Utils;
 import patterns.util.Writer;
@@ -25,8 +27,7 @@ public class CustomerService implements Service<Customer> {
       service = new CustomerService();
     }
     return service;
-  };
-
+  }
 
   @Override
   public boolean addModel() {
@@ -53,7 +54,7 @@ public class CustomerService implements Service<Customer> {
 
   @Override
   public void listModel() {
-    System.out.printf("%-3s %20s ", "id", "name");
+    System.out.printf("%-3s %20s \n", "id", "name");
     coll.forEach(System.out::println);
   }
 
@@ -65,8 +66,21 @@ public class CustomerService implements Service<Customer> {
   @Override
   public Customer read(String line) {
     String[] arr = line.split(" ");
-    //return new Person(Integer.parseInt(arr[0]),arr[1], PersonRole.valueOf(arr[2]));
-    return null;
+    Customer customer = new Customer(Integer.parseInt(arr[0]),arr[1]);
+    coll.add(customer);
+    return customer;
+
+  }
+
+  @Override
+  public Optional<Customer> findByName(String name) {
+    return coll.stream().filter(s -> s.getName().compareToIgnoreCase(name) == 0).findFirst();
+  }
+
+  @Override
+  public Optional<Customer> findById(String id) {
+    int digit = Integer.parseInt(id);
+    return coll.stream().filter(s -> s.getId() == digit).findFirst();
   }
 
   private int getNextId() {

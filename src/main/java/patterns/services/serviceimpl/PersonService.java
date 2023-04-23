@@ -3,6 +3,7 @@ package patterns.services.serviceimpl;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import patterns.main.Main;
 import patterns.models.Person;
 import patterns.models.Person.PersonRole;
@@ -57,7 +58,7 @@ public class PersonService implements Service<Person> {
   }
 
   private PersonRole enterRole() {
-    System.out.printf("Enter the role of person '%s' or '%s'", PersonRole.ACTOR, PersonRole.DIRECTOR);
+    System.out.printf("Enter the role of person '%s' or '%s' \n", PersonRole.ACTOR, PersonRole.DIRECTOR);
     while (true) {
       if (Main.in.hasNextLine()) {
         switch (Main.in.nextLine()) {
@@ -71,7 +72,7 @@ public class PersonService implements Service<Person> {
 
   @Override
   public void listModel() {
-    System.out.printf("%-3s %20s %10s", "id", "name", "role");
+    System.out.printf("%-3s %20s %10s \n", "id", "name", "role");
     coll.forEach(System.out::println);
   }
 
@@ -84,5 +85,16 @@ public class PersonService implements Service<Person> {
   public Person read(String line) {
     String[] arr = line.split(" ");
     return new Person(Integer.parseInt(arr[0]),arr[1], PersonRole.valueOf(arr[2]));
+  }
+
+  @Override
+  public Optional<Person> findByName(String name) {
+    return coll.stream().filter(s -> s.getName().compareToIgnoreCase(name) == 0).findFirst();
+  }
+
+  @Override
+  public Optional<Person> findById(String id) {
+    int digit = Integer.parseInt(id);
+    return coll.stream().filter(s -> s.getId() == digit).findFirst();
   }
 }
