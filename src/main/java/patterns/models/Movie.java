@@ -1,8 +1,7 @@
-package patterns.task;
+package patterns.models;
 
 import java.util.List;
 import patterns.models.movietypes.MovieType;
-import patterns.models.Person;
 
 public class Movie {
     private String title;
