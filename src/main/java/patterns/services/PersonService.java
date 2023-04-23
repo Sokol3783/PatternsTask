@@ -79,6 +79,7 @@ public class PersonService implements Service<Person> {
 
   @Override
   public void listModel() {
+    System.out.printf("%-3s %20s %10s", "id", "name", "role");
     persons.forEach(System.out::println);
   }
 
