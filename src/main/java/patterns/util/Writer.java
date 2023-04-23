@@ -26,21 +26,22 @@ public class Writer {
     File tempFile = new File(RESOURCE_PATH + "temp_" + filename + TYPE);
     BufferedReader reader = new BufferedReader(new FileReader(inputFile));
     FileWriter writer = new FileWriter(tempFile);
-
     boolean found = foundLine(reader, writer, id, newLine);
-
     reader.close();
     writer.close();
-
     if (!found) {
       write(newLine);
     } else {
-      if (!inputFile.delete()) {
-        throw new IllegalStateException("Failed to delete old file " + filename);
-      }
-      if (!tempFile.renameTo(inputFile)) {
-        throw new IllegalStateException("Failed to rename temporary file to " + filename);
-      }
+      updateFiles(inputFile, tempFile);
+    }
+  }
+
+  private void updateFiles(File inputFile, File tempFile) {
+    if (!inputFile.delete()) {
+      throw new IllegalStateException("Failed to delete old file " + filename);
+    }
+    if (!tempFile.renameTo(inputFile)) {
+      throw new IllegalStateException("Failed to rename temporary file to " + filename);
     }
   }
 
@@ -61,7 +62,6 @@ public class Writer {
 
   public String getById(String id) throws IOException {
     File file = new File(RESOURCE_PATH + filename + TYPE);
-
     BufferedReader reader = new BufferedReader(new FileReader(file));
     String line;
     while ((line = reader.readLine()) != null) {
@@ -71,7 +71,6 @@ public class Writer {
         return line;
       }
     }
-
     reader.close();
     return null;
   }
