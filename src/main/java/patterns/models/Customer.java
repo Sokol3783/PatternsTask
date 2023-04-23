@@ -1,22 +1,26 @@
-package patterns.task;
+package patterns.models;
 
 import java.util.List;
 
 public class Customer {
     private final String name;
-    private final List<Rental> rentals;
+    private final int id;
 
-    public Customer(String name, List<Rental> rentals) {
+    public Customer(int id, String name) {
         this.name = name;
-        this.rentals = rentals;
+        this.id = id;
     }
-
 
     public String getName() {
         return name;
     }
 
-    public String statement() {
+  public int getId() {
+    return id;
+  }
+
+  /*
+  public String statement() {
         double totalAmount = 0;
         int frequentRenterPoints = 0;
         String result = "Rental Record for " + getName() + "\n";
@@ -32,5 +36,6 @@ public class Customer {
         result += "You earned " + frequentRenterPoints + " frequent renter points";
         return result;
     }
+   */
 
 }

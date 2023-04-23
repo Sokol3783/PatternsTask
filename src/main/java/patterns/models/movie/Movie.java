@@ -1,12 +1,14 @@
-package patterns.models;
+package patterns.models.movie;
 
 import java.util.List;
-import patterns.models.movietypes.MovieType;
+import java.util.stream.Collectors;
+import patterns.models.Person;
 
 public class Movie {
     private String title;
 
     private int id;
+
     private String country;
     private String description;
     private Person director;
@@ -16,12 +18,79 @@ public class Movie {
     private Movie(){
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Person getDirector() {
+        return director;
+    }
+
+    public List<Person> getActors() {
+        return actors;
+    }
     public MovieType getPriceCode() {
         return priceCode;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Movie movie)) {
+            return false;
+        }
+
+        if (!getTitle().equals(movie.getTitle())) {
+            return false;
+        }
+        if (getCountry() != null ? !getCountry().equals(movie.getCountry())
+            : movie.getCountry() != null) {
+            return false;
+        }
+        if (getDescription() != null ? !getDescription().equals(movie.getDescription())
+            : movie.getDescription() != null) {
+            return false;
+        }
+        if (getDirector() != null ? !getDirector().equals(movie.getDirector())
+            : movie.getDirector() != null) {
+            return false;
+        }
+        return getPriceCode() != null ? getPriceCode().equals(movie.getPriceCode())
+            : movie.getPriceCode() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getTitle().hashCode();
+        result = 47 * result + (getCountry() != null ? getCountry().hashCode() : 0);
+        result = 47 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        result = 47 * result + (getDirector() != null ? getDirector().hashCode() : 0);
+        result = 47 * result + (getPriceCode() != null ? getPriceCode().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%-3d %20s %6d %6d %15s %30s %50s",
+            id, title, priceCode.getAmount(1),
+            priceCode.getFrequentRenterPoints(1),
+            director,
+            actors.stream().map(Person::getName).collect(Collectors.joining(",")),
+            description);
     }
 
     public static class Builder {
