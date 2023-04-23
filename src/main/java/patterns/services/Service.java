@@ -1,11 +1,13 @@
 package patterns.services;
 
-interface Service<T> {
+public interface Service<T> {
 
-  boolean addPerson();
+  boolean addModel();
 
-  void listPerson();
+  void listModel();
 
   boolean save(T model);
+
+  T read(String line);
 
 }

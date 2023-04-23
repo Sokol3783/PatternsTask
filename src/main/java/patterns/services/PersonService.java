@@ -1,20 +1,30 @@
 package patterns.services;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Scanner;
 import patterns.main.Main;
 import patterns.models.Person;
 import patterns.models.Person.PersonRole;
+import patterns.util.Writer;
 
 public class PersonService implements Service<Person> {
 
-  private final Collection<Person> persons = new HashSet<>();
-  private final Scanner in = Main.in;
+  private final Collection<Person> persons;
+  private final Scanner in;
+  private final Writer writer;
+
+  public PersonService(){
+    in = Main.in;
+    persons = new HashSet<>();
+    writer = new Writer(Person.class.getName());
+  }
+
 
   @Override
-  public boolean addPerson() {
-    Person person = new Person(enterName(), getPersonId(),enterRole());
+  public boolean addModel() {
+    Person person = new Person(getPersonId(),enterName(),enterRole());
     if (writeToTXT(person)) {
       persons.add(person);
       return true;
@@ -23,7 +33,16 @@ public class PersonService implements Service<Person> {
   }
 
   private boolean writeToTXT(Person person) {
-    return true;
+    try {
+      writer.updateById(String.valueOf(person.getId()), convertPersonToWright(person));
+      return true;
+    } catch (IOException e) {
+      return false;
+    }
+  }
+
+  private String convertPersonToWright(Person person) {
+    return person.getId() + ";" + person.getName() + ";" + person.getRole();
   }
 
   private PersonRole enterRole() {
@@ -59,12 +78,18 @@ public class PersonService implements Service<Person> {
   }
 
   @Override
-  public void listPerson() {
+  public void listModel() {
     persons.forEach(System.out::println);
   }
 
   @Override
   public boolean save(Person model) {
-    return false;
+    return writeToTXT(model);
+  }
+
+  @Override
+  public Person read(String line) {
+    String[] arr = line.split(" ");
+    return new Person(Integer.parseInt(arr[0]),arr[1], PersonRole.valueOf(arr[2]));
   }
 }
