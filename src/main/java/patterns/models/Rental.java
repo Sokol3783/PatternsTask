@@ -8,12 +8,15 @@ public class Rental {
     private final Movie movie;
     private final int daysRented;
 
+    private final Customer customer;
+
     private int id;
 
-    public Rental(int id, Movie movie, int daysRented) {
+    public Rental(int id, Movie movie, int daysRented, Customer customer) {
         this.id = id;
         this.movie = movie;
         this.daysRented = daysRented;
+        this.customer = customer;
     }
 
     public int getDaysRented() {
