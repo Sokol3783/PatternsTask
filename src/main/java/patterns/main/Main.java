@@ -1,6 +1,7 @@
 package patterns.main;
 
 import java.util.Scanner;
+import patterns.models.menu.Menu;
 import patterns.models.menu.MenuCreator;
 import patterns.models.menu.menuitems.MenuItem;
 
@@ -14,7 +15,7 @@ public class Main {
     }
 
     private void run() {
-        MenuItem menu = MenuCreator.MainMenuCreator.createMainMenu();
+        MenuItem menu = MenuCreator.createMenu();
         menu.run();
     }
 }

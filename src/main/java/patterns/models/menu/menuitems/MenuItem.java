@@ -1,6 +1,5 @@
 package patterns.models.menu.menuitems;
 
-import java.awt.Menu;
 
 public abstract class MenuItem implements Runnable {
 

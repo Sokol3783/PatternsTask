@@ -2,15 +2,28 @@ package patterns.models.menu;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Scanner;
+import patterns.main.Main;
 import patterns.models.Person;
+import patterns.models.movie.Movie;
+import patterns.models.movie.Movie.Builder;
 import patterns.services.serviceimpl.CustomerService;
+import patterns.services.serviceimpl.MovieService;
 import patterns.services.serviceimpl.PersonService;
 import patterns.models.menu.menuitems.MenuItem;
 import patterns.models.menu.menuitems.MenuItemLeaf;
 import patterns.services.serviceimpl.RentalService;
 import patterns.services.Service;
+import patterns.util.Utils;
 
 public abstract class MenuCreator {
+
+  private static Builder EDITABLE = null;
+
+  public static Menu createMenu(){
+    return MainMenuCreator.createMainMenu();
+  }
 
   private static Map<Integer, MenuItem> emptyMenu(){
     return new LinkedHashMap<>();
@@ -60,11 +73,64 @@ public abstract class MenuCreator {
   }
 
   private static class MovieMenuCreator {
-
+    private static final Service<Movie> service = MovieService.getInstance();
     public static MenuItem createMovieMenu() {
-      return null;
+      Map<Integer, MenuItem> menu = getDefaultLeafs(service, "movies", "movie");
+      menu.put(4, MovieEditorMenuCreator.createMenu());
+      return new Menu("Movie menu", menu);
     }
 
+  }
+
+  private static class MovieEditorMenuCreator {
+
+    private static final Service<Movie> service = MovieService.getInstance();
+
+    public static MenuItem createMenu() {
+      Map<Integer, MenuItem> menu = emptyMenu();
+      menu.put(1, chooseMovie());
+      menu.put(9, exit());
+
+      return new Menu("Movie editor", menu);
+
+    }
+
+    private static MenuItem chooseMovie() {
+      return new MenuItemLeaf("Select movie to edit", new Runnable() {
+        @Override
+        public void run() {
+            if (EDITABLE != null){
+              saveChanges();
+            }
+            while (true){
+              String value = Utils.enterTheValue("name or id of movie", 1);
+              Optional<Movie> movie = service.findById(value);
+              if (movie.isPresent()) {
+                EDITABLE = new Builder(movie.get());
+                break;
+              }
+              movie = service.findByName(value);
+              if (movie.isPresent()) {
+                EDITABLE = new Builder(movie.get());
+                break;
+              }
+            }
+        }
+
+        private void saveChanges() {
+          System.out.println("Save changes enter X/Y");
+          Scanner in = Main.in;
+          while (in.hasNextLine()){
+            char c = Character.toUpperCase((char) in.nextByte());
+            if (c == 'X') {
+              service.save(EDITABLE.build());
+            } else if (c == 'Y'){
+              return;
+            }
+          }
+        }
+      });
+    }
   }
 
   private static class RentalMenuCreator {
@@ -73,10 +139,11 @@ public abstract class MenuCreator {
 
     public static MenuItem createRentalMenu() {
       Map<Integer, MenuItem> menu = getDefaultLeafs(service, "rentals", "rental");
-      return new Menu("Customer", menu);
+      return new Menu("Rentals", menu);
     }
   }
 
+  //TODO
   private static class CustomerMenuCreator {
 
     private static final Service service = CustomerService.getInstance();
