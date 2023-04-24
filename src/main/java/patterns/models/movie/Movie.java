@@ -108,7 +108,7 @@ public class Movie {
         public Builder(Movie movie){
             title = movie.title;
             country = movie.country;
-            actors = movie.actors;
+            actors.addAll(movie.actors);
             director = movie.director;
             description = movie.description;
             priceCode = movie.priceCode;
@@ -159,7 +159,15 @@ public class Movie {
         }
 
         public Builder actors(List<Person> actors) {
-            this.actors = actors;
+            this.actors.addAll(actors);
+            this.actors = actors.stream().distinct().toList();
+            return this;
+        }
+
+        public Builder actors(Person actor) {
+            if(!this.actors.contains(actor)){
+                this.actors.add(actor);
+            }
             return this;
         }
 

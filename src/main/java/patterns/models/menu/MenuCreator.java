@@ -52,6 +52,19 @@ public abstract class MenuCreator {
     return menu;
   }
 
+  private static boolean isTrue(String question) {
+    System.out.println(question + " (Enter X - yes/ Y - no)");
+    Scanner in = Main.in;
+    while (true){
+      char c = Character.toUpperCase((char) in.nextByte());
+      if (c == 'X') {
+        return true;
+      } else if (c == 'Y'){
+        return false;
+      }
+    }
+  }
+
   public static class MainMenuCreator extends MenuCreator {
 
     public static Menu createMainMenu() {
@@ -89,10 +102,109 @@ public abstract class MenuCreator {
     public static MenuItem createMenu() {
       Map<Integer, MenuItem> menu = emptyMenu();
       menu.put(1, chooseMovie());
-      menu.put(9, exit());
+      menu.put(2, changeTitle());
+      menu.put(3, changeDirector());
+      menu.put(4, addActor());
+      menu.put(5, changeCountry());
+      menu.put(6, changeDescription());
+      menu.put(9, askSaveAndExit());
 
       return new Menu("Movie editor", menu);
 
+    }
+
+    private static MenuItem askSaveAndExit() {
+      return new MenuItemLeaf("Exit", new Runnable() {
+        @Override
+        public void run() {
+          if (EDITABLE != null){
+            if (isTrue("Save changes?")){
+              service.save(EDITABLE.build());
+            }
+          }
+        }
+      });
+    }
+
+    private static MenuItem changeDescription() {
+      return new MenuItemLeaf("Change description", new Runnable() {
+
+        @Override
+        public void run() {
+          EDITABLE.title(Utils.enterTheValue("description of movie", 0));
+        }
+      });
+    }
+
+    private static MenuItem addActor() {
+      return new MenuItemLeaf("Add actor", new Runnable() {
+
+        Service service = PersonService.getInstance();
+        @Override
+        public void run() {
+          Optional<Person> person;
+          while (true) {
+            String value = Utils.enterTheValue("id or name actor", 1);
+            person = service.findById(value);
+            if (person.isPresent()) {
+              EDITABLE.actors(person.get());
+              break;
+            }
+            person = service.findByName(value);
+            if (person.isPresent()) {
+              EDITABLE.actors(person.get());
+              break;
+            }
+            System.out.println("Actor hasn't been found!!!");
+          }
+        }
+      });
+    }
+
+    private static MenuItem changeCountry() {
+      return new MenuItemLeaf("Change title", new Runnable() {
+
+        @Override
+        public void run() {
+          EDITABLE.title(Utils.enterTheValue("country", 2));
+        }
+      });
+    }
+
+    private static MenuItem changeDirector() {
+      return new MenuItemLeaf("Change director", new Runnable() {
+
+        Service service = PersonService.getInstance();
+
+        @Override
+        public void run() {
+          Optional<Person> person;
+          while (true) {
+            String value = Utils.enterTheValue("id or name of director", 1);
+            person = service.findById(value);
+            if (person.isPresent()) {
+              EDITABLE.director(person.get());
+              break;
+            }
+            person = service.findByName(value);
+            if (person.isPresent()) {
+              EDITABLE.director(person.get());
+              break;
+            }
+            System.out.println("Director hasn't been found!!!");
+          }
+        }
+      });
+    }
+
+    private static MenuItem changeTitle() {
+      return new MenuItemLeaf("Change title", new Runnable() {
+
+        @Override
+        public void run() {
+          EDITABLE.title(Utils.enterTheValue("new title", 5));
+        }
+      });
     }
 
     private static MenuItem chooseMovie() {
@@ -100,9 +212,12 @@ public abstract class MenuCreator {
         @Override
         public void run() {
             if (EDITABLE != null){
-              saveChanges();
+              if (isTrue("Save changes?")){
+                service.save(EDITABLE.build());
+              }
             }
             while (true){
+              //TODO
               String value = Utils.enterTheValue("name or id of movie", 1);
               Optional<Movie> movie = service.findById(value);
               if (movie.isPresent()) {
@@ -115,19 +230,6 @@ public abstract class MenuCreator {
                 break;
               }
             }
-        }
-
-        private void saveChanges() {
-          System.out.println("Save changes enter X/Y");
-          Scanner in = Main.in;
-          while (in.hasNextLine()){
-            char c = Character.toUpperCase((char) in.nextByte());
-            if (c == 'X') {
-              service.save(EDITABLE.build());
-            } else if (c == 'Y'){
-              return;
-            }
-          }
         }
       });
     }

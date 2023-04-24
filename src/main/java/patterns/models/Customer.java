@@ -1,7 +1,5 @@
 package patterns.models;
 
-import java.util.List;
-
 public class Customer {
     private final String name;
     private final int id;
