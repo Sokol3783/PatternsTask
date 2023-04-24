@@ -5,13 +5,15 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import patterns.models.Customer;
 import patterns.models.Rental;
+import patterns.services.RentalActions;
 import patterns.services.Service;
 import patterns.util.Utils;
 import patterns.util.Writer;
 
-public class RentalService implements Service<Rental> {
+public class RentalService implements Service<Rental>, RentalActions {
 
   private final Collection<Rental> coll;
   private final Writer writer;
@@ -101,5 +103,28 @@ public class RentalService implements Service<Rental> {
   public Optional<Rental> findById(String id) {
     int digit = Integer.parseInt(id);
     return coll.stream().filter(s -> s.getId() == digit).findFirst();
+  }
+
+  @Override
+  public String statement() {
+    Customer customer = getCustomer();
+    final double[] totalAmount = {0};
+    final int[] frequentRenterPoints = {0};
+    String result = "Rental Record for " + customer.getName() + "\n";
+
+    result += coll.stream().filter(s -> s.getCustomer().equals(customer)).map(s -> {
+      totalAmount[0] += s.getAmount();
+      frequentRenterPoints[0] += s.getFrequentRenterPoints();
+      return "\t" + s.getMovie().getTitle() + "\t" + s.getAmount() + "\n";
+    }).collect(Collectors.joining(""));
+
+    result += "Amount owed is " + totalAmount[0] + "\n";
+    result += "You earned " + frequentRenterPoints[0] + " frequent renter points";
+    return result;
+  }
+
+  @Override
+  public String printHTML() {
+      return "";
   }
 }

@@ -38,4 +38,8 @@ public class Rental {
     public int getId() {
         return id;
     }
+
+    public Customer getCustomer() {
+        return customer;
+    }
 }
