@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import patterns.models.Customer;
-import patterns.models.Person;
 import patterns.services.Service;
 import patterns.util.Utils;
 import patterns.util.Writer;
