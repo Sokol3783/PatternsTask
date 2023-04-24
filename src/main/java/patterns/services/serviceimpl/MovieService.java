@@ -6,6 +6,10 @@ import patterns.services.Service;
 
 public class MovieService implements Service<Movie> {
 
+  public static MovieService getInstance() {
+    return null;
+  }
+
   @Override
   public boolean addModel() {
     return false;
